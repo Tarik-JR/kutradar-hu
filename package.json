@@ -1,0 +1,13 @@
+{
+  "name": "kutradar-hu",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "description": "Hungarian fuel station comparison app with explicitly simulated prices",
+  "scripts": {
+    "dev": "vite --host 127.0.0.1",
+    "test": "node --test tests/*.test.js",
+    "check": "npm test"
+  },
+  "license": "MIT"
+}
