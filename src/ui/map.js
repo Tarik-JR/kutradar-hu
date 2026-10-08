@@ -66,3 +66,9 @@ export function panMapTo(station, zoom = 13) {
 }
 
 export function resizeMap() { if (mapInstance) setTimeout(() => mapInstance.invalidateSize(), 60); }
+
+export function destroyMap() {
+  if (mapInstance) { mapInstance.remove(); mapInstance = null; }
+  markerLayer = null;
+  currentMode = null;
+}
