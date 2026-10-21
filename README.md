@@ -14,7 +14,7 @@ Inspired by the UX of [Plein](https://github.com/aslafy-z/plein), an MIT-license
 - Map markers, station detail panel, favourites, brand / radius / age filters
 - Hungarian and English interface, light/dark theme, responsive mobile layout
 - Shareable filters (without sharing your GPS location), basic installable PWA
-- Optional Leaflet/CARTO map; a stylised fallback view works without the CDN
+- Built-in illustrative demo map by default; optional Leaflet/OpenStreetMap basemap with a demo-map switch and automatic fallback on tile errors
 
 ## Run locally
 
@@ -29,7 +29,9 @@ Alternatively run `python3 -m http.server 5173` from the project directory.
 
 Run tests: `npm test`.
 
-To publish on GitHub Pages, upload the entire repository as a GitHub project and enable Pages from the root of its main branch. Paths are relative, so a project subpath works. The source is standard browser JavaScript modules.
+Build the publishable static app: `npm run build`. The dependency-free build writes `dist/`, including the license, Plein attribution and historical-date disclosure, and gives the offline cache a content-based release identifier. All paths work at the domain root or a GitHub Pages project subpath.
+
+The included GitHub Actions workflow runs tests, builds the site and deploys `dist/` on pushes to `main`. Enable **Settings → Pages → Source → GitHub Actions** once. See the [publishing guide](docs/PUBLISH.md).
 
 ## Architecture
 
@@ -47,4 +49,4 @@ KútRadar demo code is MIT-licensed. Design inspiration: [Plein](https://github.
 
 ## Publishing
 
-The history is provided in a `.bundle` file so the incremental commits survive transport. Follow the [GitHub publishing guide](docs/PUBLISH.md). The dates are intentionally synthetic, not a record of work actually performed over six months.
+The imported baseline has 20 commits with intentionally synthetic historical dates, not a record of work actually performed over six months. Subsequent development preserves those commits and uses current commit dates. Both a full repository archive (including `.git`) and a Git bundle preserve this history. Follow the [GitHub publishing guide](docs/PUBLISH.md).
