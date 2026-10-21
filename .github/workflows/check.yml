@@ -2,6 +2,8 @@ name: Validate demo
 on:
   push:
   pull_request:
+permissions:
+  contents: read
 jobs:
   test:
     runs-on: ubuntu-latest
@@ -11,3 +13,4 @@ jobs:
         with:
           node-version: '22'
       - run: npm test
+      - run: npm run build
