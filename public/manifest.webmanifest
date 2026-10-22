@@ -1,13 +1,13 @@
 {
-  "id": "./",
+  "id": "../",
   "name": "KútRadar HU — Demo",
   "short_name": "KútRadar",
   "description": "Hungarian fuel price comparison demonstration with entirely simulated data",
-  "start_url": "./",
-  "scope": "./",
+  "start_url": "../",
+  "scope": "../",
   "display": "standalone",
   "background_color": "#0d2931",
   "theme_color": "#0d2931",
   "lang": "hu",
-  "icons": [{"src":"./public/icon.svg","sizes":"any","type":"image/svg+xml","purpose":"any maskable"}]
+  "icons": [{"src":"./icon.svg","sizes":"any","type":"image/svg+xml","purpose":"any maskable"}]
 }
