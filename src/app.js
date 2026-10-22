@@ -6,7 +6,7 @@ import { filterStations } from './lib/filter.js';
 import { distanceKm, locationInHungary } from './lib/geo.js';
 import { finiteInRange } from './lib/format.js';
 import { readSettings, saveSettings, readFavourites, saveFavourites, toggleFavourite } from './lib/storage.js';
-import { renderLayout } from './ui/layout.js';
+import { renderLayout, syncControls } from './ui/layout.js';
 import { stationCard, statsTemplate, emptyTemplate } from './ui/cards.js';
 import { stationDetail } from './ui/detail.js';
 import { setupMap, updateMap, panMapTo, resizeMap, destroyMap } from './ui/map.js';
@@ -38,6 +38,7 @@ const state = {
   selectedId: null,
   mobileTab: 'list',
   bannerDismissed: false,
+  mapMode: stored.mapMode === 'online' ? 'online' : 'demo',
 };
 state.center = findCity(state.city);
 let stations = [];
@@ -45,7 +46,7 @@ let visible = [];
 let toastTimeout = null;
 
 const $ = selector => document.querySelector(selector);
-const settings = () => Object.fromEntries(['lang','theme','city','fuel','brand','radiusKm','sort','litres','consumption'].map(k => [k, state[k]]));
+const settings = () => Object.fromEntries(['lang','theme','city','fuel','brand','radiusKm','sort','litres','consumption','mapMode'].map(k => [k, state[k]]));
 function persist() { saveSettings(settings()); }
 function showToast(message) {
   const node = $('#toast');
@@ -58,6 +59,7 @@ function showToast(message) {
 
 function refresh() {
   visible = filterStations(stations, state);
+  syncControls(document, state);
   const results = $('#station-results');
   if (!results) return;
   results.innerHTML = visible.length ? visible.map((s, i) => stationCard(s, state, i)).join('') : emptyTemplate(state.lang);
@@ -88,7 +90,7 @@ function selectStation(id) {
   const station = visible.find(s => s.id === id);
   if (station) {
     panMapTo(station);
-    if (window.innerWidth < 800) {
+    if (window.innerWidth <= 800) {
       state.mobileTab = 'map';
       $('.app-shell')?.classList.add('show-map');
       document.querySelectorAll('[data-tab]').forEach(el => el.classList.toggle('active', el.dataset.tab === 'map'));
@@ -102,7 +104,7 @@ function build() {
   document.documentElement.lang = state.lang;
   document.documentElement.dataset.theme = state.theme;
   $('#app').innerHTML = renderLayout(state);
-  setupMap($('#map'), selectStation);
+  setupMap($('#map'), selectStation, state.mapMode);
   if (state.bannerDismissed) $('.map-banner').hidden = true;
   refresh();
 }
@@ -130,12 +132,11 @@ function changeField(id, value) {
 function locate() {
   if (!navigator.geolocation) return showToast(t('locationUnavailable', state.lang));
   navigator.geolocation.getCurrentPosition(position => {
-    const center = { lat: position.coords.latitude, lon: position.coords.longitude, name: t('myLocation', state.lang) };
+    const center = { lat: position.coords.latitude, lon: position.coords.longitude };
     if (!locationInHungary(center)) return showToast(t('locationUnavailable', state.lang));
     state.center = center;
     state.city = CITIES.reduce((a, b) => distanceKm(a, center) < distanceKm(b, center) ? a : b).id;
     state.selectedId = null;
-    $('#city').value = state.city;
     refresh();
   }, () => showToast(t('locationUnavailable', state.lang)), { enableHighAccuracy: false, timeout: 12000, maximumAge: 120000 });
 }
@@ -153,6 +154,7 @@ function shareView() {
 function handleAction(element) {
   const action = element.dataset.action;
   switch (action) {
+    case 'map-mode': state.mapMode = state.mapMode === 'demo' ? 'online' : 'demo'; persist(); build(); break;
     case 'locate': locate(); break;
     case 'theme': state.theme = state.theme === 'light' ? 'dark' : 'light'; document.documentElement.dataset.theme = state.theme; persist(); break;
     case 'share': shareView(); break;
@@ -195,7 +197,6 @@ function bindInteractions() {
     if (el.dataset.fuel) {
       state.fuel = validFuel(el.dataset.fuel);
       persist();
-      root.querySelectorAll('[data-fuel]').forEach(button => button.classList.toggle('active', button.dataset.fuel === state.fuel));
       refresh();
       return;
     }
@@ -215,7 +216,7 @@ function bindInteractions() {
     }
   });
   document.addEventListener('keydown', event => {
-    if (event.key === '/' && document.activeElement?.tagName !== 'INPUT') { event.preventDefault(); $('#search')?.focus(); }
+    if (event.key === '/' && !document.activeElement?.matches('input,select,textarea,[contenteditable="true"]')) { event.preventDefault(); $('#search')?.focus(); }
     if (event.key === 'Escape') { if (state.selectedId) selectStation(null); else $('#search')?.blur(); }
   });
 }
@@ -226,8 +227,10 @@ async function main() {
     stations = attachPrices(locations, prices);
     build();
     bindInteractions();
-    if ('serviceWorker' in navigator && (location.protocol === 'https:' || location.hostname === 'localhost')) {
-      window.addEventListener('load', () => navigator.serviceWorker.register('./sw.js').catch(() => {}));
+    if ('serviceWorker' in navigator && window.isSecureContext) {
+      const register = () => navigator.serviceWorker.register('./sw.js').catch(() => {});
+      if (document.readyState === 'complete') register();
+      else window.addEventListener('load', register, { once: true });
     }
   } catch (error) {
     console.error('KútRadar startup error', error);
