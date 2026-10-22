@@ -1,11 +1,12 @@
 const RADIUS_KM = 6371.0088;
 export function distanceKm(a, b) {
-  if (!a || !b) return Infinity;
+  if (!validCoordinates(a) || !validCoordinates(b)) return Infinity;
   const rad = Math.PI / 180;
   const dLat = (b.lat - a.lat) * rad;
   const dLon = (b.lon - a.lon) * rad;
   const s = Math.sin(dLat / 2) ** 2 + Math.cos(a.lat * rad) * Math.cos(b.lat * rad) * Math.sin(dLon / 2) ** 2;
-  return 2 * RADIUS_KM * Math.atan2(Math.sqrt(s), Math.sqrt(Math.max(0, 1 - s)));
+  const clamped = Math.min(1, Math.max(0, s));
+  return 2 * RADIUS_KM * Math.atan2(Math.sqrt(clamped), Math.sqrt(1 - clamped));
 }
 export function validCoordinates(p) {
   return Number.isFinite(p?.lat) && Number.isFinite(p?.lon)
