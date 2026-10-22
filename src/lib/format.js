@@ -13,6 +13,7 @@ export function escapeHtml(input) {
   return String(input ?? '').replace(/[&<>"']/g, c => ({'&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;'}[c]));
 }
 export function finiteInRange(value, low, high, defaultValue) {
+  if (!['number', 'string'].includes(typeof value) || (typeof value === 'string' && !value.trim())) return defaultValue;
   const n = Number(value);
   return Number.isFinite(n) ? Math.min(high, Math.max(low, n)) : defaultValue;
 }
