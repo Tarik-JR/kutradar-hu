@@ -9,13 +9,13 @@ export function filterStations(stations, options = {}) {
   const query = search.trim().toLocaleLowerCase('hu');
   const matches = stations.flatMap(station => {
     const price = station.prices?.[fuel];
-    if (!price) return [];
+    if (!price || !Number.isFinite(price.hufPerLitre) || price.hufPerLitre <= 0) return [];
     if (brand !== 'all' && station.brand !== brand) return [];
-    if (onlyFresh && price.ageHours >= 24) return [];
+    if (onlyFresh && (!Number.isFinite(price.ageHours) || price.ageHours < 0 || price.ageHours >= 24)) return [];
     if (favouritesOnly && !favourites.has(station.id)) return [];
     if (query && !`${station.name} ${station.city} ${station.brand}`.toLocaleLowerCase('hu').includes(query)) return [];
     const distance = distanceKm(center, station);
-    if (distance > radiusKm) return [];
+    if (!Number.isFinite(distance) || distance > radiusKm) return [];
     return [{ ...station, price, distance, totalCost: estimatedTripCost(price.hufPerLitre, distance, litres, consumption) }];
   });
   const comparisons = {
