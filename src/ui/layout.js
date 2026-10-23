@@ -4,6 +4,21 @@ import { BRANDS } from '../data/brands.js';
 import { escapeHtml } from '../lib/format.js';
 import { t } from '../lib/i18n.js';
 
+/** Keep native controls in step with normalized input and GPS-based searches. */
+export function syncControls(root, state) {
+  for (const [id, value] of [['litres', state.litres], ['consumption', state.consumption]]) {
+    const input = root.getElementById(id);
+    if (input && input.value !== String(value)) input.value = String(value);
+  }
+  const city = root.getElementById('city');
+  if (city) city.value = state.center?.name ? state.city : '';
+  root.querySelectorAll('[data-fuel]').forEach(button => {
+    const active = button.dataset.fuel === state.fuel;
+    button.classList.toggle('active', active);
+    button.setAttribute('aria-pressed', String(active));
+  });
+}
+
 export function renderLayout(state) {
   const { lang, city, fuel, radiusKm, brand, sort, onlyFresh, favouritesOnly, litres, consumption } = state;
   const options = (items, current, label) => items.map(item => `<option value="${escapeHtml(item.id)}" ${item.id === current ? 'selected' : ''}>${escapeHtml(item[label] || item.name)}</option>`).join('');
@@ -25,11 +40,11 @@ export function renderLayout(state) {
         <div class="section-intro"><div class="eyebrow"><span class="live-decoration"></span> MAGYARORSZÁG / HUNGARY</div><h1>${t('resultTitle', lang)}</h1><p>${t('disclaimerShort', lang)}</p></div>
         <label class="search-wrap"><span class="search-icon">⌕</span><input id="search" type="search" autocomplete="off" value="${escapeHtml(state.search)}" placeholder="${t('searchPlaceholder', lang)}" aria-label="${t('searchPlaceholder', lang)}"/><kbd>/</kbd></label>
         <div class="form-row two-cols city-row">
-          <label class="field"><span>${t('chooseCity', lang)}</span><select id="city">${options(CITIES, city, 'name')}</select></label>
+          <label class="field"><span>${t('chooseCity', lang)}</span><select id="city"><option value="" disabled ${!state.center?.name ? 'selected' : ''}>${t('myLocation', lang)}</option>${options(CITIES, city, 'name')}</select></label>
           <button class="locate-button" data-action="locate" title="${t('locate', lang)}"><span class="locate-crosshair">⌖</span><span>${t('myLocation', lang)}</span></button>
         </div>
         <div class="control-divider"></div>
-        <label class="field fuel-field"><span>${t('fuel', lang)}</span><div class="fuel-choices">${FUELS.map(f => `<button type="button" data-fuel="${f.id}" class="fuel-option ${fuel === f.id ? 'active' : ''}">${escapeHtml(lang === 'hu' ? f.hu : f.en)}</button>`).join('')}</div></label>
+        <div class="field fuel-field" role="group" aria-label="${t('fuel', lang)}"><span>${t('fuel', lang)}</span><div class="fuel-choices">${FUELS.map(f => `<button type="button" data-fuel="${f.id}" class="fuel-option ${fuel === f.id ? 'active' : ''}" aria-pressed="${fuel === f.id}">${escapeHtml(lang === 'hu' ? f.hu : f.en)}</button>`).join('')}</div></div>
         <div class="form-row two-cols second-fields">
           <label class="field"><span>${t('radius', lang)}</span><select id="radius">${[10, 25, 50, 100, 250].map(r => `<option value="${r}" ${radiusKm === r ? 'selected' : ''}>${r} km</option>`).join('')}</select></label>
           <label class="field"><span>${t('brand', lang)}</span><select id="brand"><option value="all">${t('allBrands', lang)}</option>${options(BRANDS, brand, 'label')}</select></label>
@@ -47,7 +62,7 @@ export function renderLayout(state) {
     <main class="map-panel" aria-label="${t('map', lang)}">
       <div class="map-canvas" id="map"></div>
       <div class="map-banner"><div><strong>● ${t('demo', lang)}</strong><span>${t('demoDescription', lang)}</span></div><button class="banner-dismiss" data-action="dismiss-banner" title="${t('close', lang)}">×</button></div>
-      <div class="map-toolbar"><button data-action="share" class="toolbar-button">↗ <span>${t('share', lang)}</span></button><div class="toolbar-location">⌖ <strong id="location-name">${escapeHtml(CITIES.find(c => c.id === city)?.name || 'Budapest')}</strong></div></div>
+      <div class="map-toolbar"><button data-action="share" class="toolbar-button">↗ <span>${t('share', lang)}</span></button><button data-action="map-mode" class="toolbar-button">${t(state.mapMode === 'online' ? 'demoMap' : 'onlineMap', lang)}</button><div class="toolbar-location">⌖ <strong id="location-name">${escapeHtml(CITIES.find(c => c.id === city)?.name || 'Budapest')}</strong></div></div>
       <div id="detail-panel" class="detail-panel" hidden></div>
       <div class="bottom-map-legend"><span class="legend-bullet"></span>${t('sourceMock', lang)} · ${t('demoShort', lang)}</div>
     </main>
