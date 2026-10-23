@@ -1,4 +1,6 @@
-const CACHE = 'kutradar-demo-v1';
+// Cache names are isolated to this app's path on a shared GitHub Pages origin.
+const CACHE_PREFIX = `kutradar-demo-${new URL(self.registration.scope).pathname}-`;
+const CACHE = CACHE_PREFIX + 'v2-__BUILD_ID__';
 const APP_FILES = [
   './','./index.html','./src/styles.css','./src/responsive.css','./src/app.js',
   './src/data/cities.js','./src/data/brands.js','./src/data/fuels.js',
@@ -12,13 +14,26 @@ self.addEventListener('install', event => {
   event.waitUntil(caches.open(CACHE).then(cache => cache.addAll(APP_FILES)).then(() => self.skipWaiting()));
 });
 self.addEventListener('activate', event => {
-  event.waitUntil(caches.keys().then(keys => Promise.all(keys.filter(key => key !== CACHE && key.startsWith('kutradar-demo-')).map(key => caches.delete(key)))).then(() => self.clients.claim()));
+  event.waitUntil(caches.keys().then(keys => Promise.all(keys.filter(key => key !== CACHE && key.startsWith(CACHE_PREFIX)).map(key => caches.delete(key)))).then(() => self.clients.claim()));
 });
+const APP_URLS = new Set(APP_FILES.map(path => new URL(path, self.registration.scope).href));
 self.addEventListener('fetch', event => {
   const url = new URL(event.request.url);
   if (event.request.method !== 'GET' || url.origin !== self.location.origin) return;
-  event.respondWith(caches.match(event.request).then(cached => cached || fetch(event.request).then(res => {
-    if (res.ok) { const copy = res.clone(); caches.open(CACHE).then(cache => cache.put(event.request, copy)); }
-    return res;
-  })));
+  // Match the shell without storing shared filters or other URL query parameters.
+  const canonical = new URL(url.pathname, url.origin).href;
+  if (!APP_URLS.has(canonical)) return;
+  event.respondWith((async () => {
+    const cache = await caches.open(CACHE);
+    try {
+      // Prefer the deployed release; use the cached shell only without a network.
+      const response = await fetch(event.request);
+      if (response.ok) {
+        try { await cache.put(canonical, response.clone()); } catch { /* storage quota */ }
+      }
+      return response;
+    } catch {
+      return (await cache.match(canonical)) || Response.error();
+    }
+  })());
 });
