@@ -1,5 +1,6 @@
 const hu = {
   tagline: 'Az olcsóbb tankolás térképen',
+  demoMap: 'Demótérkép', onlineMap: 'Online térkép',
   demo: 'DEMÓADATOK', demoShort: 'DEMO', demoDescription: 'A kutak és az árak kitalált tesztadatok. Nem használhatók valódi tankoláshoz vagy navigációhoz.',
   searchPlaceholder: 'Kút, város vagy márka keresése',
   chooseCity: 'Város', myLocation: 'Helyzetem', locate: 'Helyzetem', locationUnavailable: 'Nem sikerült meghatározni a helyzetedet.',
@@ -26,6 +27,7 @@ const hu = {
 };
 const en = {
   tagline: 'Find a better fill-up',
+  demoMap: 'Demo map', onlineMap: 'Online map',
   demo: 'DEMO DATA', demoShort: 'DEMO', demoDescription: 'All stations and prices are fictional test data. Do not use for real refuelling or navigation.',
   searchPlaceholder: 'Search station, city or brand',
   chooseCity: 'City', myLocation: 'My location', locate: 'Use my location', locationUnavailable: 'Could not determine your location.',
