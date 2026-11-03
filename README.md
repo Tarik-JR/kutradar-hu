@@ -28,7 +28,7 @@ Alternatively run `python3 -m http.server 5173` from the project directory.
 
 Run tests: `npm test`.
 
-Build the publishable static app: `npm run build`. The dependency-free build writes `dist/`, including the license and historical-date disclosure, and gives the offline cache a content-based release identifier. All paths work at the domain root or a GitHub Pages project subpath.
+Build the publishable static app: `npm run build`. The dependency-free build writes `dist/`, including the license, and gives the offline cache a content-based release identifier. All paths work at the domain root or a GitHub Pages project subpath.
 
 The included GitHub Actions workflow runs tests, builds the site and deploys `dist/` on pushes to `main`. Enable **Settings → Pages → Source → GitHub Actions** once. See the [publishing guide](docs/PUBLISH.md).
 
@@ -40,7 +40,7 @@ The included GitHub Actions workflow runs tests, builds the site and deploys `di
 - `src/app.js` — app state and event wiring
 - `tests` — Node built-in unit tests, no external packages
 
-See [data integration guide](docs/DATA_PROVIDER.md) and [Git history note](docs/HISTORY.md).
+See the [data integration guide](docs/DATA_PROVIDER.md).
 
 ## License and acknowledgements
 

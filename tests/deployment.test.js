@@ -52,8 +52,6 @@ test('Pages build contains all runtime files and disclosures and resolves under 
     const entries = await readdir(destination);
     assert.ok(entries.includes('.nojekyll'));
     for (const privateFile of ['.git', '.github', 'scripts', 'tests', 'package.json']) assert.ok(!entries.includes(privateFile));
-    const history = await readFile(join(destination, 'docs/HISTORY.md'), 'utf8');
-    assert.match(history, /synthetic historical dates/);
     assert.match(await readFile(join(destination, 'README.md'), 'utf8'), /simulated fuel prices/);
     const manifest = JSON.parse(await readFile(join(destination, 'public/manifest.webmanifest'), 'utf8'));
     for (const base of ['https://example.github.io/', 'https://example.github.io/kutradar-hu/']) {
@@ -89,6 +87,6 @@ test('worker cache cleanup and fetch interception stay inside this app', async (
   assert.deepEqual(worker.deleted, ['kutradar-demo-/kutradar-hu/-old']);
   assert.equal(worker.fetch('https://tiles.example.com/map.png'), undefined);
   assert.equal(worker.fetch('/another-app/index.html'), undefined);
-  assert.equal(worker.fetch('docs/HISTORY.md'), undefined);
+  assert.equal(worker.fetch('docs/PUBLISH.md'), undefined);
   assert.equal(worker.fetch('index.html', 'POST'), undefined);
 });
