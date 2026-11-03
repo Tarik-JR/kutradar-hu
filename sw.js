@@ -2,7 +2,7 @@
 const CACHE_PREFIX = `kutradar-demo-${new URL(self.registration.scope).pathname}-`;
 const CACHE = CACHE_PREFIX + 'v2-__BUILD_ID__';
 const APP_FILES = [
-  './','./index.html','./src/styles.css','./src/responsive.css','./src/app.js',
+  './','./index.html','./src/styles.css','./src/responsive.css','./src/ios.css','./src/app.js',
   './src/data/cities.js','./src/data/brands.js','./src/data/fuels.js',
   './src/data/stations.js','./src/data/mock-prices.js','./src/data/provider.js',
   './src/lib/geo.js','./src/lib/cost.js','./src/lib/filter.js',

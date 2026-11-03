@@ -37,7 +37,7 @@ export function renderLayout(state) {
 
     <aside class="side-panel" id="side-panel">
       <div class="side-panel-content">
-        <div class="section-intro"><div class="eyebrow"><span class="live-decoration"></span> MAGYARORSZÁG / HUNGARY</div><h1>${t('resultTitle', lang)}</h1><p>${t('disclaimerShort', lang)}</p></div>
+        <div class="section-intro"><h1>${t('resultTitle', lang)}</h1><p>${t('disclaimerShort', lang)}</p></div>
         <label class="search-wrap"><span class="search-icon">⌕</span><input id="search" type="search" autocomplete="off" value="${escapeHtml(state.search)}" placeholder="${t('searchPlaceholder', lang)}" aria-label="${t('searchPlaceholder', lang)}"/><kbd>/</kbd></label>
         <div class="form-row two-cols city-row">
           <label class="field"><span>${t('chooseCity', lang)}</span><select id="city"><option value="" disabled ${!state.center?.name ? 'selected' : ''}>${t('myLocation', lang)}</option>${options(CITIES, city, 'name')}</select></label>
@@ -56,7 +56,7 @@ export function renderLayout(state) {
         <div class="result-head"><h2 id="result-heading">${t('resultTitle', lang)}</h2><span id="result-count"></span></div>
         <div class="station-results" id="station-results" aria-live="polite"></div>
       </div>
-      <footer class="panel-footer"><span>© 2026 KútRadar HU</span><a href="https://github.com/aslafy-z/plein" target="_blank" rel="noopener noreferrer">Inspired by Plein ↗</a></footer>
+      <footer class="panel-footer"><span>© 2026 KútRadar HU</span></footer>
     </aside>
 
     <main class="map-panel" aria-label="${t('map', lang)}">

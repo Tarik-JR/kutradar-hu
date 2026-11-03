@@ -64,12 +64,11 @@ test('controls show normalized preferences, GPS origin and pressed fuel', () => 
   assert.equal(inputs.city.value, 'budapest');
 });
 
-test('both languages keep mock disclosure and Plein credit throughout the interface', () => {
+test('both languages keep mock disclosure throughout the interface', () => {
   const station = filterStations(stations, state)[0];
   for (const lang of ['hu', 'en']) {
     const view = { ...state, lang };
     const layout = renderLayout(view);
-    assert.match(layout, /https:\/\/github.com\/aslafy-z\/plein/);
     assert.match(layout, lang === 'hu' ? /nincs élő adat/ : /no live data/);
     assert.match(layout, /value="" disabled/);
     assert.match(stationCard(station, view, 0), /station-demo">DEMO/);

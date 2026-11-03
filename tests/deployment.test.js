@@ -54,7 +54,7 @@ test('Pages build contains all runtime files and disclosures and resolves under 
     for (const privateFile of ['.git', '.github', 'scripts', 'tests', 'package.json']) assert.ok(!entries.includes(privateFile));
     const history = await readFile(join(destination, 'docs/HISTORY.md'), 'utf8');
     assert.match(history, /synthetic historical dates/);
-    assert.match(await readFile(join(destination, 'README.md'), 'utf8'), /Zadkiel Aharonian/);
+    assert.match(await readFile(join(destination, 'README.md'), 'utf8'), /simulated fuel prices/);
     const manifest = JSON.parse(await readFile(join(destination, 'public/manifest.webmanifest'), 'utf8'));
     for (const base of ['https://example.github.io/', 'https://example.github.io/kutradar-hu/']) {
       const manifestURL = new URL('public/manifest.webmanifest', base);

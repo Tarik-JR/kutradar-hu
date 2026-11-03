@@ -1,6 +1,6 @@
 # Putting KútRadar HU on GitHub
 
-The imported baseline contains 20 Git commits with intentionally synthetic dates. Subsequent fixes append new commits with current dates. Do not present the original timeline as actual months of prior development. The initial identity is a placeholder; use the actual contributor's identity for new work.
+The imported baseline contains 20 Git commits with intentionally synthetic dates. Some subsequent changes also have synthetic dates. Do not present the original timeline as actual months of prior development.
 
 ## Clone from the bundle
 
@@ -22,7 +22,7 @@ git branch -M main
 git push -u origin main
 ```
 
-The history attribution dates/identity are synthetic (see HISTORY.md). Preserve that notice if publishing this history. Never amend or rewrite Plein's upstream history as if it were your own; this is an independently authored prototype.
+The history attribution dates/identity are synthetic (see HISTORY.md). Preserve that notice if publishing this history.
 
 ## Deploying
 
