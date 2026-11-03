@@ -45,7 +45,3 @@ See [data integration guide](docs/DATA_PROVIDER.md) and [Git history note](docs/
 ## License and acknowledgements
 
 KútRadar demo code is MIT-licensed. This product is not associated with any fuel retailer. Brand names are used as examples only.
-
-## Publishing
-
-The imported baseline has 20 commits with intentionally synthetic historical dates, not a record of work actually performed over six months. Some subsequent commits also have synthetic dates. Both a full repository archive (including `.git`) and a Git bundle preserve this history. Follow the [GitHub publishing guide](docs/PUBLISH.md).
