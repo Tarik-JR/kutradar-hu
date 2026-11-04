@@ -5,6 +5,12 @@ A mobile-friendly fuel station map for Hungary, **using fictional station record
 
 > **Demo only.** Every price is generated test data. Every station and coordinate is illustrative. Never rely on it for purchases or navigation.
 
+## From users, for users
+
+KútRadar HU is a free, open-source project built for the community. The vision is for users to contribute fuel prices and station information, helping one another keep the data up to date. Contributions to the project are welcome.
+
+Community-submitted updates are a future possibility and are not yet available in the app. The current version uses simulated data.
+
 ## How it works
 
 ![Illustration showing how to choose a location and fuel, compare demo prices, and explore the map](docs/images/how-it-works.svg)
