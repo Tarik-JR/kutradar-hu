@@ -5,6 +5,14 @@ A mobile-friendly fuel station map for Hungary, **using fictional station record
 
 > **Demo only.** Every price is generated test data. Every station and coordinate is illustrative. Never rely on it for purchases or navigation.
 
+## How it works
+
+![Illustration showing how to choose a location and fuel, compare demo prices, and explore the map](docs/images/how-it-works.svg)
+
+1. Choose a city or use your location, then select a fuel and search radius.
+2. Compare the demo stations by price, distance, or estimated trip cost.
+3. Explore the map, open station details, and save favourites.
+
 ## Features
 
 - 20 cities and 6 example brands, with fictional site coordinates
